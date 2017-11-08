@@ -48,7 +48,7 @@ module test;
  // Initialize Inputs
         clk = 0;
                 // Wait 100 ns for global reset to finish
-     repeat(1000) begin
+     repeat(10000) begin
      #100 ;
         clk=!clk;
     end

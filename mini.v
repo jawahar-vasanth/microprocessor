@@ -51,7 +51,7 @@ wire[7:0] out;
 reg[7:0] ram[0:15];
 reg[7:0] bus;
 assign dm1=ram[3];							//Just to check whether store is working
-assign dm2=ram[7];
+assign dm2=ram[4];
 cu ControlUnit(clk,adrs,dtin,W,R,cbus,L,S,flag);
 eu ExecutionUnit(adrs,dtin,W,R,cbus,L,out,S,bus,flag);
 
@@ -108,21 +108,39 @@ output reg[15:0] instruc;
 input wire [4:0] pc;
 input wire clk;
 initial begin
-	pmem[0]= 16'b1001_0110_00000101;  //LD R6,8b'00000100;  Factorial of 5
-	pmem[1]= 16'b1001_0111_00000010;  //LD R7,8b'00000010;
-    pmem[2]= 16'b1000_0110_0100_0000;  //MOV R6, R4;
-    pmem[3]= 16'b0001_0100_0111_0100;  //SUB R4, R7,R4;
-    pmem[4]= 16'b1000_0110_0011_0000;  //MOV R6,R3
-    pmem[5]= 16'b1000_0100_0101_0001;  //MOV R4, R5;        
-    pmem[6]= 16'b0000_0110_0011_0110;//ADD R6, R3, R6; 
-    pmem[7]= 16'b0111_0101_00000000;//DEC R5;
-    pmem[8]= 16'b1101_01001_00110_00;//BNE 9,6;                   
-    pmem[9]= 16'b0111_0100_00000000;//DEC R4
-    pmem[10]= 16'b1101_01011_00100_00;//BNE 11,4;
-    pmem[11]= 16'b1010_0110_0011_0000;//ST R6,M3;     
-   	pmem[12]= 16'b1011_0111_0011_0000;
-	pmem[13]= 16'b1100_0011_00010001;
-    pmem[14]= 16'b1111_000000000000;   //HALT
+	pmem[0]= 16'b1001_0110_00000111;   //LD R6,8b'00000100;  Factorial of 5
+    pmem[1]= 16'b1001_0111_00000010;   //LD R7,8b'00000010;
+    pmem[2]= 16'b1001_1000_00000000;   //LD R8,8b'00000000;
+    pmem[3]= 16'b1000_0110_0100_xxxx;  //MOV R6, R4;
+    pmem[4]= 16'b0001_0100_0111_0100;  //SUB R4, R7,R4;
+    pmem[5]= 16'b1000_0110_0011_xxxx;  //MOV R6,R3
+    pmem[6]= 16'b1000_1000_1001_xxxx;  //MOV R8,R9
+    pmem[7]= 16'b1000_0100_0101_xxxx;  //MOV R4, R5; 
+	pmem[8]= 16'b0000_1000_1001_1000; //ADD R8, R9, R8;       
+    pmem[9]= 16'b0000_0110_0011_0110;  //ADD R6, R3, R6;
+    pmem[10]= 16'b1110_01011_01100_xx;  //BREC 11,12 ;
+    pmem[11]= 16'b0110_1000_xxxxxxxx; //INC R8;
+    pmem[12]= 16'b0111_0101_xxxxxxxx; //DEC R5;
+    pmem[13]= 16'b1101_01110_01000_xx; //BNE 14,8;                   
+    pmem[14]= 16'b0111_0100_xxxxxxxx; //DEC R4;
+    pmem[15]= 16'b1101_10000_00101_xx; //BNE 16,5;
+    pmem[16]= 16'b1010_0110_0011_xxxx; //ST R6,M3;  
+    pmem[17]= 16'b1010_1000_0100_xxxx; //ST R8,M4;                                       
+    pmem[18]= 16'b1111_xxxxxxxxxxxx;   //STOP 
+	
+	// pmem[0]= 16'b1001_0110_00000101;  //LD R6,8b'00000100;  Factorial of 5
+	// pmem[1]= 16'b1001_0111_00000010;  //LD R7,8b'00000010;
+    // pmem[2]= 16'b1000_0110_0100_xxxx;  //MOV R6, R4;
+    // pmem[3]= 16'b0001_0100_0111_0100;  //SUB R4, R7,R4;
+    // pmem[4]= 16'b1000_0110_0011_xxxx;  //MOV R6,R3
+    // pmem[5]= 16'b1000_0100_0101_0001;  //MOV R4, R5;        
+    // pmem[6]= 16'b0000_0110_0011_0110;//ADD R6, R3, R6; 
+    // pmem[7]= 16'b0111_0101_xxxxxxxx;//DEC R5;
+    // pmem[8]= 16'b1101_01001_00110_xx;//BNE 9,6;                   
+    // pmem[9]= 16'b0111_0100_xxxxxxxx;//DEC R4
+    // pmem[10]= 16'b1101_01011_00100_xx;//BNE 11,4;
+    // pmem[11]= 16'b1010_0110_0011_xxxx;//ST R6,M3;     
+    // pmem[12]= 16'b1111_xxxxxxxxxxxx;//STOP   
 end
 always@(*)begin
  instruc=pmem[pc];
