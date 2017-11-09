@@ -42,7 +42,7 @@
 
 module mini(clk,L,W,R,S);
 wire[3:0] adrs;
-wire[7:0] dtin,dm1,dm2;
+wire[7:0] dtin,dm0,dm1,dm2;
 wire[2:0] cbus;
 wire[1:0] flag;
 output wire W,R,L,S;
@@ -50,6 +50,7 @@ input wire clk;
 wire[7:0] out;
 reg[7:0] ram[0:15];
 reg[7:0] bus;
+assign dm0=ram[5];
 assign dm1=ram[3];							//Just to check whether store is working
 assign dm2=ram[4];
 cu ControlUnit(clk,adrs,dtin,W,R,cbus,L,S,flag);
@@ -108,7 +109,7 @@ output reg[15:0] instruc;
 input wire [4:0] pc;
 input wire clk;
 initial begin
-	pmem[0]= 16'b1001_0110_00000111;   //LD R6,8b'00000100;  Factorial of 5
+	pmem[0]= 16'b1001_0110_00001000;   //LD R6,8b'00000100;  Factorial of 8
     pmem[1]= 16'b1001_0111_00000010;   //LD R7,8b'00000010;
     pmem[2]= 16'b1001_1000_00000000;   //LD R8,8b'00000000;
     pmem[3]= 16'b1000_0110_0100_xxxx;  //MOV R6, R4;
@@ -124,11 +125,12 @@ initial begin
     pmem[13]= 16'b1101_01110_01000_xx; //BNE 14,8;                   
     pmem[14]= 16'b0111_0100_xxxxxxxx; //DEC R4;
     pmem[15]= 16'b1101_10000_00101_xx; //BNE 16,5;
-    pmem[16]= 16'b1010_0110_0011_xxxx; //ST R6,M3;  
-    pmem[17]= 16'b1010_1000_0100_xxxx; //ST R8,M4;                                       
-    pmem[18]= 16'b1111_xxxxxxxxxxxx;   //STOP 
+    pmem[16]= 16'b1010_0110_0100_xxxx; //ST R6,M3;  
+    pmem[17]= 16'b1010_1000_0011_xxxx; //ST R8,M4;  
+	pmem[18]= 16'b1100_0101_00000000;  //STI M5,0x00000000                           
+    pmem[19]= 16'b1111_xxxxxxxxxxxx;   //STOP 
 	
-	// pmem[0]= 16'b1001_0110_00000101;  //LD R6,8b'00000100;  Factorial of 5
+	// pmem[0]= 16'b1001_0110_00000100;  //LD R6,8b'00000100;  Factorial of 5
 	// pmem[1]= 16'b1001_0111_00000010;  //LD R7,8b'00000010;
     // pmem[2]= 16'b1000_0110_0100_xxxx;  //MOV R6, R4;
     // pmem[3]= 16'b0001_0100_0111_0100;  //SUB R4, R7,R4;
